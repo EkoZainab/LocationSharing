@@ -1,21 +1,14 @@
 package com.example.android.locationsharing;
 
-import android.content.Context;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toolbar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,12 +17,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Objects;
-
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     FloatingActionButton fabFullscreen, fabGPS;
+    int fullScreen = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +31,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        setTitle("Settings");
+        setTitle("Send Location");
         ActionBar actionBar = this.getSupportActionBar();
         // Set the action bar back button to look like an up button
         if (actionBar != null) {
@@ -49,26 +41,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fabGPS = findViewById(R.id.fab_gps);
     }
 
-    public void setFullscreen (View view) {
-        boolean fullScreen = (getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0;
-        if (!fullScreen) {
+    public void setFullscreen(View view) {
+        if (fullScreen == 0) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            Objects.requireNonNull(getSupportActionBar()).hide();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                fabFullscreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen_exit_black_24dp, this.getTheme()));
-            } else {
-                fabFullscreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen_exit_black_24dp));
-            }
+            this.getSupportActionBar().hide();
+            fabFullscreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen_exit_black_24dp));
+            fullScreen += 1;
         } else {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-            Objects.requireNonNull(getSupportActionBar()).show();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                fabFullscreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen, this.getTheme()));
-            } else {
-                fabFullscreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen));
-            }
+            this.getSupportActionBar().show();
+            fabFullscreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen));
+            fullScreen -= 1;
         }
     }
 
