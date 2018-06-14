@@ -39,19 +39,17 @@ import java.util.Locale;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private static final int DEFAULT_ZOOM = 15;
-    FloatingActionButton fabFullscreen, fabGPS;
     private static final String TAG = "TAG";
-    int fullScreen = 0;
-    Location mLastKnownLocation;
-    boolean mLocationPermissionGranted;
-    LatLng mDefaultLocation = new LatLng(-34, 151);
-    Geocoder geocoder;
-    List<Address> addresses;
-    String address = " ";
     GeoDataClient mGeoDataClient;
     PlaceDetectionClient mPlaceDetectionClient;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int DEFAULT_ZOOM = 15;
+    LatLng mDefaultLocation = new LatLng(-34, 151);
+    FloatingActionButton fabFullscreen, fabGPS;
+    int fullScreen = 0;
+    Location mLastKnownLocation;
+    String address = "";
+    boolean mLocationPermissionGranted;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     @Override
@@ -217,8 +215,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void getAddress() {
+        Geocoder geocoder;
         geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
-
+        List<Address> addresses;
         try {
             addresses = geocoder.getFromLocation(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(), 1);
             address = addresses.get(0).getAddressLine(0);
